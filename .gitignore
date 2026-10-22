@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+*.sqlite3
+*.sqlite3-*
+.env
+.env.*
+!.env.example
+*.zip
+*.tar.gz
+.DS_Store
