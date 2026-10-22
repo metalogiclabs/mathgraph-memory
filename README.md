@@ -1,29 +1,51 @@
-# MathGraph Memory
+# MathGraph Memory — AML open-method prototype
 
-Evidence-aware agent memory research prototype for the [Agent Memory Leaderboard](https://agentmemoryleaderboard.ai/competition/).
+Source for a SQLite-backed, API-key-protected Add/Search memory prototype targeting the [2026 Agent Memory Challenge](https://agentmemoryleaderboard.ai/competition/).
 
-## Release state (22 October 2026)
+## Status (22 October 2026)
 
-The **v12 local release candidate** has 50 passing Python unit tests. The full source archive is not yet committed to this repository. Until it is, **do not treat this repository as deployable or competition-submitted**.
+- Full v12 Python source tree and test suite published in this repository.
+- 50/50 Python unit tests passed locally on the source archive prior to publication.
+- GitHub Actions is configured to run the suite; check its actual result before claiming a CI qualification.
+- A public hosted API and official AML Smoke/Full evaluation are **not** verified.
+- The attempted Render creation returned `402 billing_suspended`. **Do not submit** an undeployed URL.
+- The current Dockerfile defaults to `MEMORY_DB=/data/memory.sqlite3` and requires an external persistent disk mounted at `/data` to preserve memories across restarts.
 
-Prototype functionality in the local release:
-- HTTP Add/Search service with API-key authentication and user-scoped SQLite storage
-- FTS5 indexed lexical retrieval
-- Optional dense-vector reciprocal-rank fusion (provider and scale unqualified)
-- Explicit temporal and GitHub source-authority diagnostics
-- Local regression and HTTP smoke tests
+## Run locally
 
-### Verification boundary
+```sh
+python -m unittest discover -q
+MEMORY_API_KEY=replace-with-strong-random-key MEMORY_DB=./memory.sqlite3 MEMORY_RANKER=indexed python app.py
+```
 
-The 50 local unit tests do not establish accuracy on independent coding histories, the official AML benchmark, production durability, or successful Render deployment. No public API endpoint or leaderboard result is claimed.
+Routes: `GET /health`, authenticated `POST /add` and `POST /search`.
 
-## Publication checklist
+### Docker
 
-- [ ] Commit the exact v12 release source files and Dockerfile
-- [ ] Verify local tests match the pinned commit
-- [ ] Enable GitHub Actions regression tests
-- [ ] Configure Render persistent storage and API secret
-- [ ] Verify real public HTTP Add/Search endpoints
-- [ ] Run official AML Smoke, then Full if qualified
+```sh
+docker build -t mathgraph-memory .
+mkdir -p local-memory
+docker run --rm -p 8080:8080 -v "$PWD/local-memory:/data" -e MEMORY_API_KEY=replace-with-random-key mathgraph-memory
+```
 
-No credentials, API keys, raw memory database, or personal research data should be committed.
+Do not publicly expose the service without a strong secret, HTTPS, rate-limiting, durable storage, and an official protocol smoke test.
+
+## Experimental components
+
+- `indexed.py`: FTS5 lexical candidate generation
+- `hybrid.py`: optional vector and lexical rank fusion; no production semantic provider qualified
+- `trusted_evidence.py` and related modules: bounded GitHub status authority experiments
+- `test_*.py`: local regression cases
+
+## Verification boundary
+
+Local unit tests do not demonstrate superior independent retrieval, coding-task resolution, production resilience, or an official AML score. Evidence-authority features are experimental and should not be represented as independent source-verification of arbitrary user statements.
+
+## Submission checklist
+
+- [x] Public source repository
+- [x] Local unit suite (50/50 on release archive)
+- [ ] Confirm green GitHub Actions run on the pinned source commit
+- [ ] Public API with persistent storage
+- [ ] Real provider and competition-protocol compatibility check
+- [ ] Official Smoke and Full evaluation
