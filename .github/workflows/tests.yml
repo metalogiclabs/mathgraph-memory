@@ -17,3 +17,8 @@ jobs:
           test -f test_app.py
       - name: Run unit tests
         run: python -m unittest discover -q
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Run Cloudflare D1/FTS5 contract tests
+        run: node cloudflare/test/worker.test.mjs

@@ -1,0 +1,15 @@
+{
+  "name": "mathgraph-aml-textual-2026",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-28",
+  "workers_dev": true,
+  "observability": { "enabled": false },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mathgraph_aml_textual_2026",
+      "database_id": "038e9e94-c0be-4be9-bcbe-d0a017d6bbe8"
+    }
+  ],
+  "triggers": { "crons": ["0 3 * * *"] }
+}
