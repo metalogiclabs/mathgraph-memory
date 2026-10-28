@@ -1,0 +1,23 @@
+# AML 2026 Textual Memory candidate. This file does not deploy anything by itself.
+# A paid Render web service and persistent disk require explicit account approval.
+services:
+  - type: web
+    name: mathgraph-memory-aml
+    runtime: docker
+    plan: 0.5c-512mb
+    region: singapore
+    autoDeployTrigger: checksPass
+    healthCheckPath: /health
+    envVars:
+      - key: MEMORY_DB
+        value: /data/memory.sqlite3
+      - key: MEMORY_RANKER
+        value: indexed
+      - key: MEMORY_API_KEY
+        sync: false
+    disk:
+      name: mathgraph-memory-data
+      mountPath: /data
+      sizeGB: 5
+previews:
+  generation: "off"
